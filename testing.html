@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        //height: 100%;
+        height: 90%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #areaKosong {
+       //height: 100%;
+       margin: auto;
+       height: 5%;
+       position: absolute;
+       top: 50; left: 70; bottom: 0; right: 0;
+       background: #9fc5e8; color:#0000cc; 
+       //padding: 10px 20px 30px 25px; 
+       text-align: center
+        }
+
+      #subAreaKosong {
+        margin: auto;
+       //height: 100%;
+       height: 5%;
+       position: absolute;
+      
+        }
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="areaKosong"> </div>
+    <div id="subAreaKosong">
+    <button onclick="klikButton()">GET LAT & LNG</button>
+    <input type="text" id="kotak">
+      </div>
+    <script>
+
+       //###########################################
+       //############# GLOBAL VARIABLE #############
+       //###########################################
+
+      var tes = 'iniVarGlobal';
+
+
+      
+      function initMap() {
+       
+       //var myLatLng = {lat: -6.436851, lng: 106.910000}; // GUNUNG_PUTRI
+       var myLatLng = {lat: -6.4365085087801805, lng: 106.90993026256558};
+       var kmlFiles = 'https://raw.githubusercontent.com/hasbianalif1995/tes/master/BISPLAN_UPDATE.kml';  //REPO_GITHUB
+       //var iconMarker = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+       var iconMarker = 'https://github.com/hasbianalif1995/tes/blob/master/icon2.png?raw=true';
+       //###########################################
+       //############# OBJECT INSTANCE #############
+       //###########################################
+
+
+
+       //============= MAP OBJECT =============
+       var map = new google.maps.Map(document.getElementById('map'), {
+           center: myLatLng , 
+           zoom: 15,
+	         mapTypeId: 'satellite',
+           //mapTypeId: 'hybrid',
+           //disableDefaultUI: true
+        });
+
+	       //============= KML OBJECT =============
+        var ctaLayer = new google.maps.KmlLayer({
+           url: kmlFiles, 
+           map: map,
+           preserveViewport:true //Agar bisa menyesuaikan zoom object Map
+        });
+
+       //============= MARKER OBJECT =============
+        var marker = new google.maps.Marker({
+           position: myLatLng,
+           map: map,
+           title: 'PILIH LOKASI ANTAR',
+           draggable: true,
+           icon: iconMarker
+        });
+
+        
+
+        
+	     //#########################################
+       //############# EVENT HANDLER #############
+       //#########################################
+
+
+       //============= GET LAT&LNG =============
+       //Event Ketika MARKER Selesai Di Drag
+        google.maps.event.addListener(marker,'dragend',function(){
+           map.setCenter(this.getPosition()); // Set map center to marker position
+           updatePosition(this.getPosition().lat(), this.getPosition().lng()); // update position display (LAT&LNG)
+
+        });
+
+       //============= GET LAT&LNG =============
+       /*
+       //Event Ketika MAP Selesai Di Drag
+         google.maps.event.addListener(map, 'dragend', function () {
+           marker.setPosition(this.getCenter()); // set marker position to map center
+           updatePosition(this.getCenter().lat(), this.getCenter().lng()); // update position display (LAT&LNG)
+        });
+        */
+
+        //Event Ketika MAP Sedang Di Drag
+         google.maps.event.addListener(map, 'drag', function () {
+           marker.setPosition(this.getCenter()); // set marker position to map center
+           updatePosition(this.getCenter().lat(), this.getCenter().lng()); // update position display (LAT&LNG)
+        });
+
+
+
+      } //end initMap()
+
+      //###########################################
+      //############# FUNGSI TAMBAHAN #############
+      //###########################################
+
+
+      function updatePosition(lat, lng) {
+          var tesLocal = 'iniVarLokal';
+           //document.getElementById('subAreaKosong').innerHTML = '<p> Current Lat: ' + lat.toFixed(4) + ' Current Lng: ' + lng.toFixed(4) + '</p>'; //toFixed() untuk memotong angka belakang koma
+           document.getElementById('areaKosong').innerHTML = '<p> Current Lat: ' + lat + ' Current Lng: ' + lng + '</p>';
+           tes = 'Lat: ' + lat + ' Lng: ' + lng ;
+        }
+
+
+      function klikButton() {
+          //document.getElementById("kotak").value = "Johnny Bravo";
+          document.getElementById("kotak").value = tes;
+
+          }
+
+
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDylpyAZ31mTuFnSof_ewRH8QTMHcMCiKY&callback=initMap"
+    async defer></script>
+  </body>
+</html>
